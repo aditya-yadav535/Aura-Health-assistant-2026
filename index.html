@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aura Health 2026 — AI Clinical Assistant, X-Ray &amp; Lab Intelligence</title>
+  <meta name="description" content="Next-generation AI Health Companion. Screen chest X-rays with ViT saliency maps, analyze lab reports with OCR, check symptoms, lookup bilingual medicines, and book doctors." />
+  <meta name="keywords" content="health assistant 2026, AI radiology, chest X-ray screening, lab report OCR, symptom checker, online pharmacy, doctor consultation, Hindi health app" />
+  <meta name="theme-color" content="#060913" />
+
+  <!-- Fonts & Libraries -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="style.css" />
+  
+  <!-- Client-side OCR engine -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+</head>
+<body>
+
+  <!-- Ambient Lighting Effects -->
+  <div class="ambient-glow ambient-glow-1"></div>
+  <div class="ambient-glow ambient-glow-2"></div>
+
+  <!-- =========================================================================
+       SCREEN 1: AUTHENTICATION / LANDING
+       ========================================================================= -->
+  <div id="screen-auth" class="auth-screen">
+    <header class="auth-topbar">
+      <div class="brand-badge">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M2 12h20"></path>
+            <circle cx="12" cy="12" r="9" stroke-opacity="0.3"></circle>
+          </svg>
+        </div>
+        <span>Aura Health <span style="color:var(--cyan-400)">2026</span></span>
+      </div>
+
+      <div class="topbar-controls">
+        <div class="lang-toggle" id="auth-lang-toggle">
+          <button type="button" class="active" data-lang="en">EN</button>
+          <button type="button" data-lang="hi">हिन्दी</button>
+        </div>
+        <button type="button" class="theme-toggle-btn" id="auth-theme-btn" title="Toggle Light/Dark Theme">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon-sun">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="auth-center">
+      <div class="auth-card">
+        <div class="auth-tabs">
+          <button type="button" class="auth-tab active" data-tab="signin" data-i18n="tab_signin">Sign in</button>
+          <button type="button" class="auth-tab" data-tab="signup" data-i18n="tab_signup">Create account</button>
+        </div>
+
+        <!-- Sign In Form -->
+        <form id="signin-form" class="auth-form active">
+          <p class="form-lead" data-i18n="signin_lead">Access your clinical dashboard, diagnostic history, and health records securely.</p>
+          <div class="input-group">
+            <label class="input-label" for="signin-email" data-i18n="label_email">Email address</label>
+            <input class="input-field" id="signin-email" type="email" placeholder="doctor_patient@aura.health" required />
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="signin-password" data-i18n="label_password">Password</label>
+            <div class="input-wrap">
+              <input class="input-field" id="signin-password" type="password" placeholder="••••••••" required />
+              <button type="button" class="input-toggle-btn pass-toggle" data-target="signin-password" title="Toggle password visibility">👁</button>
+            </div>
+          </div>
+          <div class="auth-error" id="signin-error"></div>
+          <label class="remember-row">
+            <input type="checkbox" id="signin-remember" checked />
+            <span data-i18n="remember_me">Stay signed in on this workstation</span>
+          </label>
+          <button type="submit" class="btn btn-primary btn-block" data-i18n="btn_signin">Sign in to Dashboard</button>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signup-form" class="auth-form">
+          <p class="form-lead" data-i18n="signup_lead">Register your clinical workspace once. Saved locally so you can return at any time.</p>
+          <div class="input-group">
+            <label class="input-label" for="signup-name" data-i18n="label_fullname">Full name</label>
+            <input class="input-field" id="signup-name" type="text" placeholder="Dr. Riya Sharma / Patient" required />
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="signup-email" data-i18n="label_email">Email address</label>
+            <input class="input-field" id="signup-email" type="email" placeholder="riya.sharma@example.com" required />
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="signup-password" data-i18n="label_password">Password</label>
+            <div class="input-wrap">
+              <input class="input-field" id="signup-password" type="password" minlength="6" placeholder="Min. 6 characters" required />
+              <button type="button" class="input-toggle-btn pass-toggle" data-target="signup-password">👁</button>
+            </div>
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="signup-confirm" data-i18n="label_confirm">Confirm password</label>
+            <div class="input-wrap">
+              <input class="input-field" id="signup-confirm" type="password" minlength="6" placeholder="Repeat password" required />
+              <button type="button" class="input-toggle-btn pass-toggle" data-target="signup-confirm">👁</button>
+            </div>
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="signup-role" data-i18n="label_role">Workspace Role</label>
+            <select class="input-field" id="signup-role">
+              <option value="patient" data-i18n="role_patient">Patient / Individual</option>
+              <option value="admin" data-i18n="role_admin">Clinical Administrator</option>
+            </select>
+          </div>
+          <div class="auth-error" id="signup-error"></div>
+          <button type="submit" class="btn btn-emerald btn-block" data-i18n="btn_create_account">Create Account</button>
+        </form>
+
+        <div class="auth-divider">
+          <span data-i18n="divider_or">or instant demo access</span>
+        </div>
+
+        <button type="button" id="guest-btn" class="btn btn-secondary btn-block">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span data-i18n="btn_guest">Explore Instantly as Guest</span>
+        </button>
+
+        <div class="security-box">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span data-i18n="security_note">Passwords are encrypted via SHA-256 client-side and saved exclusively in this browser. No personal health records are sent to third parties.</span>
+        </div>
+      </div>
+
+      <p class="auth-footer" data-i18n="landing_foot">
+        Aura Health 2026 is an AI-assisted clinical screening engine and educational platform. It does not replace professional diagnostic radiology or physician evaluation.
+      </p>
+    </main>
+  </div>
+
+
+  <!-- =========================================================================
+       SCREEN 2: MAIN CLINICAL APPLICATION SHELL
+       ========================================================================= -->
+  <div id="app-shell">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <div class="brand-badge">
+          <div class="brand-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M2 12h20"></path>
+              <circle cx="12" cy="12" r="9" stroke-opacity="0.3"></circle>
+            </svg>
+          </div>
+          <div>
+            <div class="sidebar-brand-text">Aura Health</div>
+            <div style="font-size:0.68rem; color:var(--cyan-400); font-weight:700; letter-spacing:0.06em;">EDITION 2026</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-nav-group">
+        <div class="sidebar-nav-label" data-i18n="nav_group_overview">Overview</div>
+        <button type="button" class="nav-item active" data-view="dashboard">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+          </span>
+          <span data-i18n="nav_dashboard">Dashboard</span>
+        </button>
+      </div>
+
+      <div class="sidebar-nav-group">
+        <div class="sidebar-nav-label" data-i18n="nav_group_tools">Clinical Care Tools</div>
+        <button type="button" class="nav-item" data-view="xray">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+          </span>
+          <span data-i18n="nav_xray">Chest X-Ray ViT</span>
+        </button>
+
+        <button type="button" class="nav-item" data-view="report">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </span>
+          <span data-i18n="nav_report">Lab Report OCR</span>
+        </button>
+
+        <button type="button" class="nav-item" data-view="symptom">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+          </span>
+          <span data-i18n="nav_symptom">Symptom Checker</span>
+        </button>
+
+        <button type="button" class="nav-item" data-view="medicine">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path>
+              <path d="m8.5 8.5 7 7"></path>
+            </svg>
+          </span>
+          <span data-i18n="nav_medicine">Medicine Index</span>
+        </button>
+
+        <button type="button" class="nav-item" data-view="pharmacy">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+          </span>
+          <span data-i18n="nav_pharmacy">Pharmacy Store</span>
+        </button>
+
+        <button type="button" class="nav-item" data-view="doctor">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <line x1="20" y1="8" x2="20" y2="14"></line>
+              <line x1="23" y1="11" x2="17" y2="11"></line>
+            </svg>
+          </span>
+          <span data-i18n="nav_doctor">Doctor Booking</span>
+        </button>
+      </div>
+
+      <div class="sidebar-nav-group">
+        <div class="sidebar-nav-label" data-i18n="nav_group_records">Patient Records</div>
+        <button type="button" class="nav-item" data-view="reports">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+            </svg>
+          </span>
+          <span data-i18n="nav_reports">My Health Dossier</span>
+        </button>
+
+        <button type="button" class="nav-item" data-view="admin" id="admin-nav-item" style="display:none;">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </span>
+          <span data-i18n="nav_admin">Admin Center</span>
+        </button>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-badge">
+          <div class="user-avatar-circle" id="user-avatar">R</div>
+          <div class="user-info-text">
+            <div class="user-name-text" id="user-name-label">Dr. Riya Sharma</div>
+            <div class="user-role-badge" id="user-role-label">Patient / Individual</div>
+          </div>
+        </div>
+        <button type="button" class="sidebar-logout-btn" id="logout-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          <span data-i18n="signout">Sign Out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-content">
+      
+      <!-- Topbar Header -->
+      <header class="app-topbar">
+        <div class="topbar-titles">
+          <h1 id="topbar-title">Clinical Dashboard</h1>
+          <div class="topbar-sub" id="topbar-sub">Comprehensive overview of medical care tools and recent diagnostic records</div>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="lang-toggle" id="app-lang-toggle">
+            <button type="button" class="active" data-lang="en">EN</button>
+            <button type="button" data-lang="hi">हिन्दी</button>
+          </div>
+          <button type="button" class="theme-toggle-btn" id="app-theme-btn" title="Toggle Theme">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon-sun">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- =====================================================================
+           VIEW 1: CLINICAL DASHBOARD
+           ===================================================================== -->
+      <section class="view-section active" id="view-dashboard">
+        
+        <!-- Welcome Hero Banner -->
+        <div class="glass-card" style="background: linear-gradient(135deg, rgba(14, 165, 233, 0.12) 0%, rgba(139, 92, 246, 0.08) 100%);">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+            <div>
+              <div class="clinical-badge-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                <span>AI Clinical Copilot Active</span>
+              </div>
+              <h2 style="font-size:1.6rem; margin-bottom:6px;">
+                <span id="dashboard-greeting">Good day</span>, <span id="dashboard-user-name" style="color:var(--cyan-400)">Riya</span>
+              </h2>
+              <p style="color:var(--text-muted); font-size:0.92rem; max-width:650px;" data-i18n="dashboard_hero_desc">
+                Welcome to your intelligent medical command station. Upload radiology scans, parse laboratory test reports, compute symptom triage, or consult certified clinicians.
+              </p>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <button type="button" class="btn btn-primary" data-nav="xray">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"></path></svg>
+                <span data-i18n="nav_xray">Screen X-Ray</span>
+              </button>
+              <button type="button" class="btn btn-secondary" data-nav="report">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>
+                <span data-i18n="nav_report">Analyze Lab Report</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Telemetry Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-widget">
+            <div class="stat-icon-box stat-icon-cyan">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            </div>
+            <div>
+              <div class="stat-metric-number" id="stat-scans">0</div>
+              <div class="stat-metric-label" data-i18n="stat_scans">Chest X-Rays Analyzed</div>
+            </div>
+          </div>
+
+          <div class="stat-widget">
+            <div class="stat-icon-box stat-icon-violet">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>
+            </div>
+            <div>
+              <div class="stat-metric-number" id="stat-reports">0</div>
+              <div class="stat-metric-label" data-i18n="stat_reports">Lab Reports Decoded</div>
+            </div>
+          </div>
+
+          <div class="stat-widget">
+            <div class="stat-icon-box stat-icon-emerald">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+            </div>
+            <div>
+              <div class="stat-metric-number" id="stat-symptoms">0</div>
+              <div class="stat-metric-label" data-i18n="stat_symptoms">Symptom Triage Checks</div>
+            </div>
+          </div>
+
+          <div class="stat-widget">
+            <div class="stat-icon-box stat-icon-amber">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path></svg>
+            </div>
+            <div>
+              <div class="stat-metric-number" id="stat-meds">0</div>
+              <div class="stat-metric-label" data-i18n="stat_meds">Medicines Searched</div>
+            </div>
+          </div>
+
+          <div class="stat-widget">
+            <div class="stat-icon-box stat-icon-rose">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle></svg>
+            </div>
+            <div>
+              <div class="stat-metric-number" id="stat-consults">0</div>
+              <div class="stat-metric-label" data-i18n="stat_consults">Clinician Consultations</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Access Module Cards -->
+        <h3 style="font-size:1.2rem; margin-bottom:16px;" data-i18n="dashboard_prompt">Where would you like to start?</h3>
+        <div class="module-launch-grid">
+          
+          <div class="module-launch-card" data-nav="xray">
+            <div class="module-header-row">
+              <div class="module-icon" style="background:rgba(14, 165, 233, 0.12); color:var(--cyan-400);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              </div>
+              <span class="badge badge-cyan">ViT Grad-CAM</span>
+            </div>
+            <h3 data-i18n="module_xray_title">Chest X-Ray Analysis</h3>
+            <p data-i18n="module_xray_desc">Upload anterior-posterior chest radiographs for automated screening with saliency heatmaps.</p>
+            <div class="module-arrow"><span>Launch Analyzer</span> →</div>
+          </div>
+
+          <div class="module-launch-card" data-nav="report">
+            <div class="module-header-row">
+              <div class="module-icon" style="background:rgba(139, 92, 246, 0.12); color:var(--violet-400);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>
+              </div>
+              <span class="badge badge-violet">OCR &amp; AI Chat</span>
+            </div>
+            <h3 data-i18n="module_report_title">Lab Report OCR &amp; Chat</h3>
+            <p data-i18n="module_report_desc">Extract blood tests, lipid panels, and metabolic biomarkers automatically from photo reports.</p>
+            <div class="module-arrow"><span>Inspect Reports</span> →</div>
+          </div>
+
+          <div class="module-launch-card" data-nav="symptom">
+            <div class="module-header-row">
+              <div class="module-icon" style="background:rgba(16, 185, 129, 0.12); color:var(--emerald-400);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+              </div>
+              <span class="badge badge-emerald">Triage AI</span>
+            </div>
+            <h3 data-i18n="module_symptom_title">Symptom Checker</h3>
+            <p data-i18n="module_symptom_desc">Select clinical indicators, duration, and severity to receive differential triage probabilities.</p>
+            <div class="module-arrow"><span>Check Symptoms</span> →</div>
+          </div>
+
+          <div class="module-launch-card" data-nav="medicine">
+            <div class="module-header-row">
+              <div class="module-icon" style="background:rgba(245, 158, 11, 0.12); color:var(--amber-400);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path></svg>
+              </div>
+              <span class="badge badge-amber">Bilingual</span>
+            </div>
+            <h3 data-i18n="module_medicine_title">Medicine Directory</h3>
+            <p data-i18n="module_medicine_desc">Search 30+ therapeutics with indications, dosages, contraindications, and Rx status.</p>
+            <div class="module-arrow"><span>Explore Catalog</span> →</div>
+          </div>
+
+          <div class="module-launch-card" data-nav="pharmacy">
+            <div class="module-header-row">
+              <div class="module-icon" style="background:rgba(244, 63, 94, 0.12); color:var(--rose-400);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+              </div>
+              <span class="badge badge-rose">Demo Store</span>
+            </div>
+            <h3 data-i18n="module_pharmacy_title">Pharmacy E-Commerce</h3>
+            <p data-i18n="module_pharmacy_desc">Browse live inventory with real-time cart pricing, prescription checks, and simulated order delivery.</p>
+            <div class="module-arrow"><span>Order Meds</span> →</div>
+          </div>
+
+          <div class="module-launch-card" data-nav="doctor">
+            <div class="module-header-row">
+              <div class="module-icon" style="background:rgba(14, 165, 233, 0.12); color:var(--cyan-400);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle></svg>
+              </div>
+              <span class="badge badge-cyan">Certified</span>
+            </div>
+            <h3 data-i18n="module_doctor_title">Doctor Consultation</h3>
+            <p data-i18n="module_doctor_desc">Schedule teleconsultation or clinic slots with pulmonologists, cardiologists, and physicians.</p>
+            <div class="module-arrow"><span>Book Doctor</span> →</div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- =====================================================================
+           VIEW 2: CHEST X-RAY SCREENING STUDIO (ViT + Saliency Map)
+           ===================================================================== -->
+      <section class="view-section" id="view-xray">
+        <div class="clinical-disclaimer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <span data-i18n="xray_disclaimer">This is an AI-assisted screening tool, not a diagnostic decision. A licensed radiologist or physician must confirm any findings prior to initiating medical treatment.</span>
+        </div>
+
+        <div class="glass-card">
+          <div class="card-header-row">
+            <div class="card-title-group">
+              <h2 data-i18n="xray_card_title">Upload &amp; Screen Chest Radiograph</h2>
+              <div class="card-subtitle" data-i18n="xray_card_sub">Supported formats: JPG, PNG, DICOM-preview. Images remain in local browser sandbox memory.</div>
+            </div>
+            <div class="clinical-badge-pill" data-i18n="xray_tech_note">
+              Model: Hybrid Multi-Scale CNN + Vision Transformer (ViT-Patch16) Grad-CAM
+            </div>
+          </div>
+
+          <div class="media-stage-grid">
+            <!-- Left Column: Upload & Image Canvas -->
+            <div>
+              <div class="dropzone-container" id="xray-dropzone">
+                <div class="scanner-laser-line"></div>
+                <input type="file" id="xray-file" accept="image/*" />
+                <div class="dropzone-icon">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                </div>
+                <div class="dropzone-text">
+                  <span data-i18n="dropzone_pre">Drag a chest X-Ray here, or</span>
+                  <label for="xray-file" class="dropzone-highlight" data-i18n="dropzone_choose">browse files</label>
+                </div>
+              </div>
+
+              <!-- Quick Demo Preset Samples -->
+              <div class="sample-presets-bar">
+                <span class="sample-presets-label">⚡ One-Click Demo Samples:</span>
+                <button type="button" class="btn btn-secondary btn-sm sample-xray-btn" data-type="normal">Normal Radiograph</button>
+                <button type="button" class="btn btn-secondary btn-sm sample-xray-btn" data-type="pneumonia">Pneumonia Consolidation</button>
+                <button type="button" class="btn btn-secondary btn-sm sample-xray-btn" data-type="cardiomegaly">Cardiomegaly / Effusion</button>
+              </div>
+
+              <!-- Viewport with Saliency Heatmap -->
+              <div class="viewport-preview-box" id="xray-preview-box" style="display:none;">
+                <div class="scanner-laser-line"></div>
+                <img id="xray-preview-img" src="" alt="Chest Radiograph Preview" />
+                <canvas id="xray-heatmap-canvas"></canvas>
+              </div>
+
+              <!-- Heatmap Controls Toolbar -->
+              <div class="heatmap-controls-row" id="xray-heatmap-toolbar" style="display:none;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <button type="button" class="btn btn-secondary btn-sm" id="xray-toggle-heatmap-btn" data-i18n="btn_show_explain">Toggle Heatmap</button>
+                  <label style="font-size:0.78rem;">Opacity:</label>
+                  <input type="range" id="xray-heatmap-opacity" min="10" max="100" value="70" style="width:90px;" />
+                </div>
+                <div style="font-size:0.75rem; color:var(--cyan-400);">Grad-CAM Attention Focus Active</div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div style="margin-top:16px; display:flex; gap:10px;">
+                <button type="button" class="btn btn-primary" id="xray-analyze-btn" disabled>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                  <span data-i18n="btn_run_analysis">Run ViT Analysis</span>
+                </button>
+                <button type="button" class="btn btn-secondary" id="xray-reset-btn" style="display:none;">Reset</button>
+              </div>
+            </div>
+
+            <!-- Right Column: Results & Pathology Breakdown -->
+            <div class="analysis-output-card" id="xray-result-panel">
+              <div class="status-placeholder-box" id="xray-placeholder">
+                <div class="status-placeholder-icon">🩻</div>
+                <div data-i18n="xray_placeholder_initial">Upload a chest radiograph or choose a demo sample to view real-time diagnostic assessment.</div>
+              </div>
+
+              <div id="xray-dynamic-results" style="display:none;">
+                <div>
+                  <div style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim);" data-i18n="result_label">Screening Assessment</div>
+                  <div class="result-verdict-title" id="xray-verdict-text">Normal Lungs</div>
+                </div>
+
+                <div class="confidence-meter-group">
+                  <div class="meter-label-row">
+                    <span data-i18n="confidence_label">Confidence Metric</span>
+                    <span id="xray-confidence-val">96%</span>
+                  </div>
+                  <div class="meter-track">
+                    <div class="meter-fill" id="xray-confidence-fill"></div>
+                  </div>
+                </div>
+
+                <div class="pathology-bars-list">
+                  <div style="font-size:0.78rem; font-weight:700; color:var(--text-dim); margin-bottom:4px;">PATHOLOGY DIFFERENTIAL (ViT ATTENTION)</div>
+                  <div class="pathology-bar-item">
+                    <span class="pathology-name">Pneumonia</span>
+                    <div class="meter-track"><div class="meter-fill" id="bar-pneumonia" style="width:0%"></div></div>
+                    <span class="pathology-pct" id="pct-pneumonia">0%</span>
+                  </div>
+                  <div class="pathology-bar-item">
+                    <span class="pathology-name">Lung Infiltrate</span>
+                    <div class="meter-track"><div class="meter-fill" id="bar-infiltrate" style="width:0%"></div></div>
+                    <span class="pathology-pct" id="pct-infiltrate">0%</span>
+                  </div>
+                  <div class="pathology-bar-item">
+                    <span class="pathology-name">Pleural Effusion</span>
+                    <div class="meter-track"><div class="meter-fill" id="bar-effusion" style="width:0%"></div></div>
+                    <span class="pathology-pct" id="pct-effusion">0%</span>
+                  </div>
+                  <div class="pathology-bar-item">
+                    <span class="pathology-name">Cardiomegaly</span>
+                    <div class="meter-track"><div class="meter-fill" id="bar-cardiomegaly" style="width:0%"></div></div>
+                    <span class="pathology-pct" id="pct-cardiomegaly">0%</span>
+                  </div>
+                </div>
+
+                <div id="xray-clinical-recommendation" class="clinical-action-box action-box-safe"></div>
+
+                <div style="display:flex; gap:10px; margin-top:8px;">
+                  <button type="button" class="btn btn-emerald btn-sm" data-nav="doctor">Consult Pulmonologist</button>
+                  <button type="button" class="btn btn-secondary btn-sm" id="xray-save-dossier-btn">Log in Dossier</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           VIEW 3: MEDICAL LAB REPORT ANALYZER (OCR + Biomarkers + AI Chat)
+           ===================================================================== -->
+      <section class="view-section" id="view-report">
+        <div class="clinical-disclaimer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <span data-i18n="report_disclaimer">This tool extracts text and matches numbers against standard physiological reference ranges. Always verify with a clinician before taking clinical actions.</span>
+        </div>
+
+        <div class="glass-card">
+          <div class="card-header-row">
+            <div class="card-title-group">
+              <h2 data-i18n="report_card_title">Upload &amp; Decode Medical Lab Report</h2>
+              <div class="card-subtitle" data-i18n="report_card_sub">Blood count (CBC), lipid profile, diabetic checkup, thyroid, or metabolic panel photos.</div>
+            </div>
+            <div class="clinical-badge-pill" data-i18n="report_tech_note">
+              OCR Engine: Tesseract.js Neural OCR + Diagnostic Fuzzy Classifier
+            </div>
+          </div>
+
+          <div class="media-stage-grid">
+            <!-- Left Stage: Upload / Demo & Viewport -->
+            <div>
+              <div class="dropzone-container" id="report-dropzone">
+                <div class="scanner-laser-line"></div>
+                <input type="file" id="report-file" accept="image/*" />
+                <div class="dropzone-icon">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                </div>
+                <div class="dropzone-text">
+                  <span data-i18n="dropzone_pre">Drag a lab report photo here, or</span>
+                  <label for="report-file" class="dropzone-highlight" data-i18n="dropzone_choose">choose a file</label>
+                </div>
+              </div>
+
+              <!-- Quick Demo Preset Samples -->
+              <div class="sample-presets-bar">
+                <span class="sample-presets-label">⚡ One-Click Demo Reports:</span>
+                <button type="button" class="btn btn-secondary btn-sm sample-report-btn" data-type="diabetic">Diabetic &amp; Lipid Panel</button>
+                <button type="button" class="btn btn-secondary btn-sm sample-report-btn" data-type="anemia">CBC Anemia Report</button>
+                <button type="button" class="btn btn-secondary btn-sm sample-report-btn" data-type="healthy">Normal Checkup</button>
+              </div>
+
+              <div class="viewport-preview-box" id="report-preview-box" style="display:none; min-height:220px;">
+                <img id="report-preview-img" src="" alt="Medical Lab Report Preview" />
+              </div>
+
+              <div style="margin-top:16px; display:flex; gap:10px;">
+                <button type="button" class="btn btn-primary" id="report-analyze-btn" disabled>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>
+                  <span data-i18n="btn_analyze_report">Analyze Report with OCR</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Right Stage: Extracted Biomarker Findings -->
+            <div class="analysis-output-card" id="report-result-panel">
+              <div class="status-placeholder-box" id="report-placeholder">
+                <div class="status-placeholder-icon">📄</div>
+                <div data-i18n="report_placeholder_initial">Upload a lab report image or select a demo sample to parse biomarkers and clinical metrics.</div>
+              </div>
+
+              <div id="report-dynamic-results" style="display:none;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div style="font-size:0.78rem; text-transform:uppercase; color:var(--text-dim);" data-i18n="report_result_label">Extracted Biomarkers</div>
+                  <span class="badge badge-cyan" id="report-source-badge">OCR Parsed</span>
+                </div>
+
+                <table class="biomarker-table">
+                  <thead>
+                    <tr>
+                      <th>Biomarker</th>
+                      <th>Observed</th>
+                      <th>Range</th>
+                      <th>Flag</th>
+                    </tr>
+                  </thead>
+                  <tbody id="biomarker-table-body">
+                    <!-- Populated dynamically via JS -->
+                  </tbody>
+                </table>
+
+                <div class="clinical-action-box action-box-safe" id="report-pattern-box" style="margin-top:10px;">
+                  <h4 style="font-size:0.95rem; margin-bottom:4px;" id="report-pattern-title">Overall Assessment</h4>
+                  <p id="report-pattern-desc" style="font-size:0.84rem;"></p>
+                </div>
+
+                <!-- Raw OCR Text Inspector Box -->
+                <details id="report-raw-ocr-wrapper" style="margin-top:10px; background:rgba(0,0,0,0.22); border:1px solid var(--border-subtle); border-radius:var(--radius-sm); padding:10px 14px;">
+                  <summary style="cursor:pointer; color:var(--cyan-400); font-weight:600; font-size:0.82rem; outline:none;">🔍 Inspect Raw Text Extracted from File (OCR Output)</summary>
+                  <pre id="report-raw-ocr-text" style="white-space:pre-wrap; margin-top:8px; color:var(--text-muted); font-family:monospace; font-size:0.78rem; max-height:160px; overflow-y:auto; padding:8px; background:var(--bg-elevated); border-radius:4px; margin-bottom:0;"></pre>
+                </details>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive AI Report Chatbot Assistant -->
+          <div class="report-chat-container" id="report-chat-section" style="display:none;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+              <div style="width:24px; height:24px; border-radius:50%; background:var(--cyan-500); display:flex; align-items:center; justify-content:center; color:#FFF; font-size:0.75rem;">AI</div>
+              <h3 style="font-size:1.05rem;" data-i18n="chat_heading">Ask Clinical AI About This Report</h3>
+            </div>
+
+            <div class="chat-suggestions-bar">
+              <button type="button" class="chat-suggestion-chip" data-q="Am I diabetic or prediabetic?">Am I diabetic or prediabetic?</button>
+              <button type="button" class="chat-suggestion-chip" data-q="What does my hemoglobin level indicate?">What does my hemoglobin mean?</button>
+              <button type="button" class="chat-suggestion-chip" data-q="Is my cholesterol elevated?">Is my cholesterol elevated?</button>
+              <button type="button" class="chat-suggestion-chip" data-q="What lifestyle or dietary changes are advised?">Advised diet changes?</button>
+            </div>
+
+            <div class="chat-message-log" id="report-chat-log"></div>
+
+            <div class="chat-input-toolbar">
+              <input type="text" id="report-chat-input" data-i18n-placeholder="chat_placeholder" placeholder="Ask anything about your glucose, hemoglobin, WBC, or cholesterol..." />
+              <button type="button" class="btn btn-primary btn-sm" id="report-chat-send" data-i18n="chat_send">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                <span>Ask AI</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           VIEW 4: SYMPTOM CHECKER & MULTI-CONDITION TRIAGE
+           ===================================================================== -->
+      <section class="view-section" id="view-symptom">
+        <div class="clinical-disclaimer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <span data-i18n="symptom_disclaimer">This clinical triage assistant provides generalized differential possibilities. In case of sudden chest pain, severe breathlessness, or stroke symptoms, contact emergency medical services immediately.</span>
+        </div>
+
+        <div class="glass-card">
+          <div class="card-header-row">
+            <div class="card-title-group">
+              <h2 data-i18n="symptom_card_title">Clinical Symptom Evaluation</h2>
+              <div class="card-subtitle" data-i18n="symptom_card_sub">Select experienced symptoms across biological systems to receive multi-condition differential probabilities.</div>
+            </div>
+          </div>
+
+          <!-- Symptom Categories -->
+          <div class="symptom-category-group">
+            <div class="symptom-category-title">Respiratory &amp; Chest</div>
+            <div class="chips-cloud" id="symptoms-respiratory">
+              <button type="button" class="symptom-chip" data-symptom="cough">💨 <span data-i18n="chip_cough">Persistent Cough</span></button>
+              <button type="button" class="symptom-chip" data-symptom="breathless">🫁 <span data-i18n="chip_breathless">Shortness of Breath</span></button>
+              <button type="button" class="symptom-chip" data-symptom="chestpain">💔 <span data-i18n="chip_chestpain">Chest Tightness / Discomfort</span></button>
+              <button type="button" class="symptom-chip" data-symptom="wheezing">🌬️ <span data-i18n="chip_wheezing">Wheezing Sound</span></button>
+            </div>
+          </div>
+
+          <div class="symptom-category-group">
+            <div class="symptom-category-title">Systemic &amp; Temperature</div>
+            <div class="chips-cloud" id="symptoms-systemic">
+              <button type="button" class="symptom-chip" data-symptom="fever">🔥 <span data-i18n="chip_fever">Fever / Chills</span></button>
+              <button type="button" class="symptom-chip" data-symptom="fatigue">🔋 <span data-i18n="chip_fatigue">Severe Fatigue</span></button>
+              <button type="button" class="symptom-chip" data-symptom="bodyache">⚡ <span data-i18n="chip_bodyache">Generalized Body Aches</span></button>
+              <button type="button" class="symptom-chip" data-symptom="sweating">💦 <span data-i18n="chip_sweating">Night Sweats</span></button>
+            </div>
+          </div>
+
+          <div class="symptom-category-group">
+            <div class="symptom-category-title">Neurological &amp; Head</div>
+            <div class="chips-cloud" id="symptoms-neuro">
+              <button type="button" class="symptom-chip" data-symptom="headache">🧠 <span data-i18n="chip_headache">Throbbing Headache</span></button>
+              <button type="button" class="symptom-chip" data-symptom="dizziness">💫 <span data-i18n="chip_dizziness">Dizziness / Lightheadedness</span></button>
+              <button type="button" class="symptom-chip" data-symptom="sorethroat">🗣️ <span data-i18n="chip_sorethroat">Sore Throat / Difficulty Swallowing</span></button>
+            </div>
+          </div>
+
+          <div class="symptom-category-group">
+            <div class="symptom-category-title">Gastrointestinal</div>
+            <div class="chips-cloud" id="symptoms-gi">
+              <button type="button" class="symptom-chip" data-symptom="nausea">🤢 <span data-i18n="chip_nausea">Nausea / Vomiting</span></button>
+              <button type="button" class="symptom-chip" data-symptom="stomach">⚡ <span data-i18n="chip_stomach">Abdominal Cramps</span></button>
+              <button type="button" class="symptom-chip" data-symptom="diarrhea">💧 <span data-i18n="chip_diarrhea">Loose Stools / Diarrhea</span></button>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:18px; margin-top:20px;">
+            <div class="input-group">
+              <label class="input-label" for="symptom-duration" data-i18n="label_duration">Duration of Symptoms</label>
+              <select class="input-field" id="symptom-duration">
+                <option value="1" data-i18n="duration_1">Under 24 hours</option>
+                <option value="2" selected data-i18n="duration_2">1 to 3 days</option>
+                <option value="3" data-i18n="duration_3">4 to 7 days</option>
+                <option value="4" data-i18n="duration_4">Over 1 week</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label class="input-label" for="symptom-severity">Severity Rating (1 to 10)</label>
+              <div style="display:flex; align-items:center; gap:12px; margin-top:6px;">
+                <input type="range" id="symptom-severity" min="1" max="10" value="4" style="flex:1;" />
+                <span id="severity-val" style="font-family:var(--font-display); font-weight:700; width:30px; text-align:right;">4/10</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" for="symptom-notes" data-i18n="label_notes">Clinical Context &amp; Medical History (Optional)</label>
+            <textarea class="input-field" id="symptom-notes" rows="2" data-i18n-placeholder="notes_placeholder" placeholder="e.g. History of asthma or diabetes, recent international travel, started after monsoon rain..."></textarea>
+          </div>
+
+          <div style="margin-top:16px;">
+            <button type="button" class="btn btn-primary" id="symptom-submit-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+              <span data-i18n="btn_get_guidance">Compute Clinical Triage</span>
+            </button>
+          </div>
+
+          <!-- Dynamic Differential Triage Output -->
+          <div class="triage-results-card" id="symptom-results-container" style="display:none;">
+            <h3 style="font-size:1.1rem; margin-bottom:14px;">Differential Diagnosis Probabilities</h3>
+            <div id="conditions-rank-list"></div>
+
+            <div class="clinical-action-box" id="symptom-urgency-banner" style="margin-top:16px;"></div>
+
+            <div style="margin-top:14px; display:flex; gap:10px;">
+              <button type="button" class="btn btn-emerald btn-sm" data-nav="doctor">Schedule Clinician Teleconsult</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="symptom-save-btn">Save to Dossier</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           VIEW 5: MEDICINE EXPLORER ENCYCLOPEDIA (Bilingual 30+ Therapeutics)
+           ===================================================================== -->
+      <section class="view-section" id="view-medicine">
+        <div class="glass-card">
+          <div class="card-header-row">
+            <div class="card-title-group">
+              <h2 data-i18n="med_card_title">Therapeutics &amp; Medicine Index</h2>
+              <div class="card-subtitle" data-i18n="med_card_sub">Search 30+ certified medications with English and Hindi vernacular, indications, precautions, and prescription requirements.</div>
+            </div>
+          </div>
+
+          <div class="search-filter-bar">
+            <input type="text" id="med-search-input" data-i18n-placeholder="med_search_placeholder" placeholder="Search by name: Paracetamol, Amoxicillin, Metformin, सिटिरिज़िन..." />
+            <select class="category-filter-select input-field" id="med-category-filter">
+              <option value="all">All Categories</option>
+              <option value="Analgesic">Pain &amp; Fever (NSAIDs)</option>
+              <option value="Antibiotic">Antibiotics &amp; Antivirals</option>
+              <option value="Antihistamine">Allergies &amp; Antihistamines</option>
+              <option value="Cardiovascular">Cardiovascular &amp; Blood Pressure</option>
+              <option value="Diabetes">Endocrine &amp; Diabetes</option>
+              <option value="Gastrointestinal">Gastrointestinal &amp; Acid</option>
+              <option value="Respiratory">Respiratory &amp; Inhalers</option>
+              <option value="Supplements">Vitamins &amp; Minerals</option>
+            </select>
+          </div>
+
+          <div id="med-results-count" style="font-size:0.82rem; color:var(--text-muted); margin-bottom:16px;"></div>
+          <div class="medicine-cards-grid" id="med-cards-container"></div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           VIEW 6: PHARMACY E-COMMERCE CATALOG & CHECKOUT
+           ===================================================================== -->
+      <section class="view-section" id="view-pharmacy">
+        <div class="glass-card">
+          <div class="card-header-row">
+            <div class="card-title-group">
+              <h2 data-i18n="pharm_card_title">Clinical Pharmacy Store</h2>
+              <div class="card-subtitle" data-i18n="pharm_card_sub">Order verified pharmaceutical stocks with real-time inventory tracking and prescription validation.</div>
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" id="cart-drawer-toggle">
+              🛒 <span data-i18n="cart_view">View Cart</span> (<span id="cart-badge-count">0</span>)
+            </button>
+          </div>
+
+          <div class="pharmacy-catalog-grid" id="pharmacy-catalog-container"></div>
+
+          <!-- Sticky / Summary Cart Bar -->
+          <div class="cart-floating-bar" id="cart-floating-bar">
+            <div>
+              <div style="font-size:0.8rem; color:var(--text-muted);">Current Cart Total</div>
+              <div style="font-family:var(--font-display); font-size:1.3rem; font-weight:700; color:var(--emerald-400);" id="cart-total-price">₹0</div>
+              <div style="font-size:0.75rem; color:var(--text-dim);" id="cart-status-text">Your cart is empty.</div>
+            </div>
+            <button type="button" class="btn btn-emerald" id="cart-checkout-btn" disabled data-i18n="btn_checkout">Proceed to Checkout</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           VIEW 7: DOCTOR CONSULTATION DIRECTORY & BOOKING
+           ===================================================================== -->
+      <section class="view-section" id="view-doctor">
+        <div class="clinical-disclaimer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <span data-i18n="doctor_disclaimer">Schedule an appointment when algorithmic assessment is inconclusive, symptoms persist, or you require prescription medications.</span>
+        </div>
+
+        <div class="glass-card">
+          <div class="card-header-row">
+            <div class="card-title-group">
+              <h2 data-i18n="doctor_card_title">Verified Clinicians &amp; Specialists</h2>
+              <div class="card-subtitle" data-i18n="doctor_card_sub">Board-certified physicians available for instant HD video teleconsultations or clinic visits.</div>
+            </div>
+          </div>
+
+          <div class="doctor-directory-grid" id="doctors-directory-container"></div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           VIEW 8: PATIENT HEALTH DOSSIER & TIMELINE
+           ===================================================================== -->
+      <section class="view-section" id="view-reports">
+        <div class="glass-card">
+          <div class="card-header-row">
+            <div class="card-title-group">
+              <h2 data-i18n="reports_card_title">Patient Health Dossier &amp; Timeline</h2>
+              <div class="card-subtitle" data-i18n="reports_card_sub">Comprehensive audit trail of all radiology screenings, lab results, and appointments.</div>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <button type="button" class="btn btn-secondary btn-sm" id="print-dossier-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                <span>Print Dossier</span>
+              </button>
+              <button type="button" class="btn btn-ghost btn-sm" id="clear-history-btn">Clear History</button>
+            </div>
+          </div>
+
+          <div class="timeline-feed" id="patient-timeline-feed"></div>
+          <div class="status-placeholder-box" id="timeline-empty-box" style="display:none;" data-i18n="reports_empty">
+            No clinical records logged yet. Run a chest X-Ray, parse a lab report, or check symptoms to build your dossier.
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           VIEW 9: ADMIN TELEMETRY COMMAND CENTER
+           ===================================================================== -->
+      <section class="view-section" id="view-admin">
+        <div class="glass-card">
+          <div class="card-header-row">
+            <div class="card-title-group">
+              <h2 data-i18n="admin_card1_title">System Telemetry &amp; Epidemiological Metrics</h2>
+              <div class="card-subtitle" data-i18n="admin_card1_sub">Anonymized, aggregate population data streams for diagnostic tracking and model performance.</div>
+            </div>
+            <span class="badge badge-emerald">Live Telemetry</span>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-widget">
+              <div>
+                <div class="stat-metric-number" id="admin-kpi-users">128</div>
+                <div class="stat-metric-label">Registered Patients</div>
+              </div>
+            </div>
+            <div class="stat-widget">
+              <div>
+                <div class="stat-metric-number" id="admin-kpi-scans">0</div>
+                <div class="stat-metric-label">Radiology Inferences</div>
+              </div>
+            </div>
+            <div class="stat-widget">
+              <div>
+                <div class="stat-metric-number" id="admin-kpi-reports">0</div>
+                <div class="stat-metric-label">Lab Reports OCRed</div>
+              </div>
+            </div>
+            <div class="stat-widget">
+              <div>
+                <div class="stat-metric-number" id="admin-kpi-flagged" style="color:var(--rose-400);">0</div>
+                <div class="stat-metric-label">High-Risk Flagged</div>
+              </div>
+            </div>
+          </div>
+
+          <h3 style="font-size:1.1rem; margin:24px 0 16px;" data-i18n="admin_card2_title">Diagnostic Distribution Ratios</h3>
+          <div id="admin-analytics-bars"></div>
+
+          <h3 style="font-size:1.1rem; margin:32px 0 14px;">Recent System Audit Events</h3>
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Operation</th>
+                <th>Operator</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="admin-audit-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       MODALS & SLIDEOVERS
+       ========================================================================= -->
+  
+  <!-- Booking & Checkout Modal -->
+  <div class="modal-backdrop" id="app-modal-backdrop">
+    <div class="modal-window" id="app-modal-window">
+      <button type="button" class="modal-close-btn" id="modal-close-btn">&times;</button>
+      <div id="modal-dynamic-content"></div>
+    </div>
+  </div>
+
+  <!-- Global Toast Notifications -->
+  <div class="toast-notice" id="toast-element">
+    <div id="toast-icon">✨</div>
+    <div id="toast-text">Message</div>
+  </div>
+
+  <!-- Particle Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Main Logic Script -->
+  <script src="app.js"></script>
+</body>
+</html>
